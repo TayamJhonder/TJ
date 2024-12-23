@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jhonder Tayam - 1st Year BSCS | CCDI Sorsogon City</title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:500,400,300,200,100" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: Raleway;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: linear-gradient(25deg, #16054A, #C8A6B4);
+            text-shadow: 0px 1px 2px rgba(0,0,0,0.4);
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+
+        #blurCanvasTop {
+            left: 0%;
+            top: 0%;
+            position: absolute;
+        }
+
+        #blurCanvasBottom {
+            left: 50%;
+            top: 0;
+            position: absolute;
+        }
+
+        .content {
+            left: 15%;
+            top: 20%;
+            width: 70%;
+            position: relative;
+            text-align: center;
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            border: 5px solid rgba(255, 255, 255, 0.8);
+            object-fit: cover;
+        }
+
+        h1.title {
+            color: white;
+            font-size: 4vw;
+            display: inline;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .title span {
+            display: inline-block;
+            opacity: 1;
+        }
+
+        p.desc {
+            position: relative;
+            width: 100%;
+            font-size: 4vw;
+            color: rgba(255, 255, 255, 1);
+            font-weight: 200;
+            margin-bottom: 40px;
+        }
+
+        p.about-me {
+            font-size: 1.5vw;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 200;
+            margin-bottom: 40px;
+            text-align: justify;
+        }
+
+        .contacts {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 1vw;
+        }
+
+        .contact {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .contact li {
+            list-style-type: none;
+        }
+
+        .contact li a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 30px;
+        }
+
+        .contact li a:hover {
+            color: rgba(255, 255, 255, 1);
+        }
+
+        .contact li i {
+            font-size: 30px;
+            transition: color 0.3s ease;
+        }
+
+        .contact li a:hover i {
+            color: rgba(255, 255, 255, 1);
+        }
+
+        .blur {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            overflow: hidden;
+        }
+
+        .blurTop {
+            left: 40%;
+            top: -110%;
+            transform: rotate(20deg);
+            transform-origin: 0 100%;
+        }
+
+        .blurBottom {
+            left: -60%;
+            top: 100%;
+            transform: rotate(20deg);
+            transform-origin: 100% 0%;
+        }
+
+        /* Mouse trail particle style */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background-color: white;
+            pointer-events: none;
+            opacity: 0.7;
+            animation: particle-animation 0.75s ease-out infinite;
+        }
+
+        @keyframes particle-animation {
+            0% {
+                transform: scale(0.5);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <canvas class="container" id="container" role="main"></canvas>
+    <div class="content">
+        <img src="jhonder.jpg" alt="Jhonder Tayam" class="profile-photo">
+        <h1 class="title">
+            <span>Jhonder Tayam</span>
+        </h1>
+        <p class="desc">1st Year BSCS | CCDI Sorsogon City</p>
+
+        <!-- About Me Section -->
+        <p class="about-me">
+            Hi, I'm Jhonder Tayam, but you can call me Else If Code. I'm a first-year college student from Rawis, Bacon, Sorsogon City. I have a strong passion for technology and have been exposed to several groups in social media related to tech. Although I forgot some of what I learned before due to a lack of resources and time, I'm now working hard to regain my old knowledge and restore my skills.
+        </p>
+
+        <ul class="contact">
+            <li><a href="mailto:tayamjhondertayam@gmail.com"><i class="fas fa-envelope"></i></a></li>
+            <li><a href="https://www.facebook.com/jhonder.tayam" target="_blank"><i class="fab fa-facebook"></i></a></li>
+            <li><a href="https://www.instagram.com/jhonder_tayam/" target="_blank"><i class="fab fa-instagram"></i></a></li>
+            <li><a href="https://github.com/JhonderTayam" target="_blank"><i class="fab fa-github"></i></a></li>
+        </ul>
+    </div>
+
+    <div class="blur blurTop">
+        <canvas class="canvas" id="blurCanvasTop"></canvas>
+    </div>
+    <div class="blur blurBottom">
+        <canvas width="1000px" height="1000px" class="canvas" id="blurCanvasBottom"></canvas>
+    </div>
+
+    <script>
+        // Particle effect for mouse trail
+        document.addEventListener("mousemove", function(e) {
+            let particle = document.createElement('div');
+            particle.classList.add('particle');
+            document.body.appendChild(particle);
+
+            let x = e.clientX;
+            let y = e.clientY;
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+
+            let size = Math.random() * 10 + 5;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+
+            setTimeout(function() {
+                particle.remove();
+            }, 750); // Particle disappears after animation duration
+        });
+
+        // Background animation effect
+        var canvas = document.getElementById('container');
+        var clone = document.getElementById('blurCanvasBottom');
+        var cloneCtx = clone.getContext('2d');
+        var ctx = canvas.getContext('2d');
+        
+        var w = $('#blurCanvasTop').width();
+        var h = $('#blurCanvasTop').height();
+
+        var ww = $(window).width();
+        var wh = $(window).height();
+        canvas.width = ww;
+        canvas.height = wh;
+        var partCount = 100;
+        var particles = [];
+
+        function particle() {
+            this.color = 'rgba(255,255,255,'+ Math.random() + ')';
+            this.x = randomInt(0, ww);
+            this.y = randomInt(0, wh);
+            this.direction = {
+                "x": -1 + Math.random() * 2,
+                "y": -1 + Math.random() * 2
+            };
+            this.vx = 0.3 * Math.random();
+            this.vy = 0.3 * Math.random();
+            this.radius = randomInt(2, 3);
+
+            this.float = function() {
+                this.x += this.vx * this.direction.x;
+                this.y += this.vy * this.direction.y;
+            };
+
+            this.changeDirection = function(axis) {
+                this.direction[axis] *= -1;
+            };
+
+            this.boundaryCheck = function() {
+                if (this.x >= ww) {
+                    this.x = ww;
+                    this.changeDirection("x");
+                } else if (this.x <= 0) {
+                    this.x = 0;
+                    this.changeDirection("x");
+                }
+                if (this.y >= wh) {
+                    this.y = wh;
+                    this.changeDirection("y");
+                } else if (this.y <= 0) {
+                    this.y = 0;
+                    this.changeDirection("y");
+                }
+            };
+
+            this.draw = function() {
+                ctx.beginPath();
+                ctx.fillStyle = this.color;
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fill();
+            };
+        }
+
+        function clearCanvas() {
+            cloneCtx.clearRect(0, 0, ww, wh);
+            ctx.clearRect(0, 0, ww, wh);
+        }
+
+        function createParticles() {
+            for (i = 0; i < partCount; i++) {
+                var p = new particle();
+                particles.push(p);
+            }
+        }
+
+        function drawParticles() {
+            for (i = 0; i < particles.length; i++) {
+                p = particles[i];
+                p.draw();
+            }
+        }
+
+        function updateParticles() {
+            for (var i = particles.length - 1; i >= 0; i--) {
+                p = particles[i];
+                p.float();
+                p.boundaryCheck();
+            }
+        }
+
+        createParticles();
+        drawParticles();
+
+        function animateParticles() {
+            clearCanvas();
+            drawParticles();
+            updateParticles();
+            cloneCtx.drawImage(canvas, 0, 0);
+            requestAnimationFrame(animateParticles);
+        }
+
+        requestAnimationFrame(animateParticles);
+        cloneCtx.drawImage(canvas, 0, 0);
+
+        $(window).on('resize', function() {
+            ww = $(window).width();
+            wh = $(window).height();
+            canvas.width = ww;
+            canvas.height = wh;
+            clearCanvas();
+            particles = [];
+            createParticles();
+            drawParticles();
+        });
+
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+        function velocityInt(min, max) {
+            return Math.random() * (max - min + 1) + min;
+        }
+    </script>
+</body>
+</html>
